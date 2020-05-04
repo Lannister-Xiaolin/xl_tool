@@ -27,6 +27,7 @@ class MyThread(threading.Thread):
         try:
             if self.target:
                 self.result = self.target(*self.args, **self.kwargs)
+                logging.info("成功获取返回结果")
         finally:
             # Avoid a refcycle if the thread is running a function with
             # an argument that has a member that points to the thread.

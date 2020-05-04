@@ -120,6 +120,10 @@ class VocAnalysis(ObjectAnalysis):
             try:
                 results = self.single_annotation_analysis(xml_file)
             except ValueError:
+                print("NonAnnotation",xml_file)
+                continue
+            except ZeroDivisionError:
+                print("ZeroDivisionError", xml_file)
                 continue
             batch_results["images"]["aspects"].append(results["image"][0])
             batch_results["images"]["areas"].append(results["image"][1])
