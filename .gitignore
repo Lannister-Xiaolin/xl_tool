@@ -1,0 +1,26 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+/venv
+/build/
+/dist/
+/xl_tool.egg-info/
+/xlapi.egg-info/
+.idea/.gitignore
+.idea/codeStyles/
+.idea/dbnavigator.xml
+.idea/deployment.xml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/packege_xl_io.iml
+build/
+dist/
+xl_tool.egg-info/
+xlapi.egg-info/
