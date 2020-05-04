@@ -117,7 +117,10 @@ class VocAnalysis(ObjectAnalysis):
         }
         pbar = tqdm(xml_files)
         for xml_file in pbar:
-            results = self.single_annotation_analysis(xml_file)
+            try:
+                results = self.single_annotation_analysis(xml_file)
+            except ValueError:
+                continue
             batch_results["images"]["aspects"].append(results["image"][0])
             batch_results["images"]["areas"].append(results["image"][1])
             batch_results["images"]["box_per_images"].append(results["image"][2])
