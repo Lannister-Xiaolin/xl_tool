@@ -1,9 +1,12 @@
 #!usr/bin/env python3
 # -*- coding: UTF-8 -*-
 from xl_tool.data.image.analysis import VocAnalysis
+
+
 def analysis_test():
     anaer = VocAnalysis()
-    (anaer.dataset_analysis(r"E:\Programming\Python\8_Ganlanz\food_recognition\dataset\自建数据集\2_网络图片\0_已标框",4,r"F:\1.json",r"F:/"))
+    (anaer.dataset_analysis(r"E:\Programming\Python\8_Ganlanz\food_recognition\dataset\自建数据集\2_网络图片\0_已标框", 4,
+                            r"F:\1.json", r"F:/"))
     temp1 = anaer.results["boxes"]["labels"]
     # # print(anaer.results["boxes"]["labels"])
     # (anaer.dataset_analysis(r"F:\Large_dataset\VOC\VOCtest_06-Nov-2007\VOCdevkit"
@@ -13,4 +16,8 @@ def analysis_test():
     #                         r"\VOC2007\Annotations",2))
     # print(temp1 == anaer.results["boxes"]["labels"])
     # print(anaer.results)
+
+
 analysis_test()
+
+

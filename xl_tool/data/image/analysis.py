@@ -120,7 +120,7 @@ class VocAnalysis(ObjectAnalysis):
             try:
                 results = self.single_annotation_analysis(xml_file)
             except ValueError:
-                print("NonAnnotation",xml_file)
+                print("NonAnnotation", xml_file)
                 continue
             except ZeroDivisionError:
                 print("ZeroDivisionError", xml_file)
