@@ -133,7 +133,7 @@ class VocAnalysis(ObjectAnalysis):
             batch_results["boxes"]["areas"].extend(results["box"][2])
             batch_results["boxes"]["labels"].extend(results["box"][0])
             batch_results["boxes"]["ratios"].extend(results["box"][3])
-            pbar.set_description("analysis progress: ")
+            # pbar.set_description("analysis progress: ")
         return batch_results
 
     @time_analysis_wrapper("分析耗时：")
@@ -178,7 +178,7 @@ class VocAnalysis(ObjectAnalysis):
 
         labels = Counter(self.results["boxes"]["labels"])
         if plt_path:
-            fig = plt.figure(figsize=(len(labels)*2, 12))
+            fig = plt.figure(figsize=(min(32, len(labels) + 4), 12))
             ax = fig.add_subplot(1, 1, 1)
             ax.bar(*zip(*labels.items()))
 
