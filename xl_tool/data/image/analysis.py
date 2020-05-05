@@ -178,7 +178,7 @@ class VocAnalysis(ObjectAnalysis):
 
         labels = Counter(self.results["boxes"]["labels"])
         if plt_path:
-            fig = plt.figure(figsize=(min(32, len(labels) + 4), 12))
+            fig = plt.figure(figsize=(min(64, len(labels) + 4), 12))
             ax = fig.add_subplot(1, 1, 1)
             ax.bar(*zip(*labels.items()))
 
