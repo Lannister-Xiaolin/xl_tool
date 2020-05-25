@@ -12,7 +12,6 @@ from copy import deepcopy
 from collections import Counter
 import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator, MultipleLocator, FuncFormatter
-
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 步骤一（替换sans-serif字体）
 plt.rcParams['axes.unicode_minus'] = False  # 步骤二（解决坐标轴负数的负号显示问题）
 
@@ -109,6 +108,9 @@ class VocAnalysis(ObjectAnalysis):
         labels = [i["name"] for i in boxes]
         return {"image": (image_aspect, image_area, box_per_image),
                 "box": (labels, box_aspects, box_areas, area_ratios)}
+
+
+
 
     def batch_annotation_analysis(self, xml_files):
         batch_results = {

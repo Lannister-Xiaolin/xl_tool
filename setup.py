@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="xl_tool", # Replace with your own username
-    version="0.1.1",
+    version="0.1.2",
     author="Xiaolin",
     author_email="119xiaolin@163.com",
     description="my tool function",
