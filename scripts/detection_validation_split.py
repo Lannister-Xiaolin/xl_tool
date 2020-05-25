@@ -68,7 +68,7 @@ def validation_split(xml_path, train, val, image_path=None, val_split=0.2, save_
     print("validation distribute: ", labels_count_val)
     if save_result:
         save_to_json({"all_labels":
-                          dict(labels_count_val),
+                          labels_count,
                       "val_labels": labels_count_val}, save_result)
 
 
