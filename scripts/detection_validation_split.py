@@ -3,12 +3,11 @@
 
 """
 根据目标框分布划分目标检测数据集
-python detection_validation_split.py --xml_path= \
-F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\Annotations \
---train=F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\trainm\
- --val=F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\valm\
+python detection_validation_split.py --xml_path=\VOC2007\Annotations \
+--train=、VOC2007\train\
+ --val=\VOC2007\val\
   --val_split=0.1 \
-  --save_result=F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\labels_distribute.json
+  --save_result=\VOC2007\labels_distribute.json
 """
 
 import os
