@@ -47,7 +47,7 @@ def batch_object_replace(labeled_data, object_files, object_classes, image_save_
     blender = ObjectReplaceBlend()
     object_images = [Image.open(i) for i in object_files]
     aspects = [i.size[0] / i.size[1] for i in object_images] if not aspects else aspects
-
+    xml_save_path = xml_save_path if xml_save_path else image_save_path
     pbar = tqdm(list(labeled_data))
 
     assert len(aspects) == len(object_images), "目标长宽比数量与图片数量不一致"
