@@ -72,7 +72,7 @@ def batch_object_replace(labeled_data, object_files, object_classes, image_save_
             objects_info = [[object_classes[index]] + coordinate for coordinate, index in
                             zip(boxes, aug_object_indexes)]
             xml = text2xml.get_xml(xml_folder, filename, filename, xml_source, aug_image.size, objects_info)
-            with open(save_xml, "w") as f:
+            with open(save_xml, "w", encoding="utf-8") as f:
                 f.write(xml)
         except Exception as e:
             logging.warning("数据替换异常！！！！\n" + str(e) + "\n" + str(xml_file))
@@ -147,7 +147,7 @@ def batch_mul_object_blend(object_path, background_config_path, image_save_path,
             text2xml = Text2XML()
             xml = text2xml.get_xml(folder, image_file_name, image_file_name, source, background_img.size, objects_info)
             xml_save_file = f"{xml_save_path}/{image_file_name.replace('jpg', 'xml')}"
-            with open(xml_save_file, "w") as f:
+            with open(xml_save_file, "w", encoding="utf-8") as f:
                 f.write(xml)
             for c in choose_cats:
                 cats_count[c] += 1

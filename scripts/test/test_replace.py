@@ -15,8 +15,8 @@ def test_replace():
     batch_object_replace(labeled_datas, ob,ob_classes,
                          r"F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\新建文件夹",aspect_jump=0.0)
 def test_mul_object():
-    object_path = r"F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\val_ob"
-    background_config_path =r"E:\Programming\Python\8_Ganlanz\food_recognition\dataset\自建数据集\4_背景底图"
+    object_path = r"F:\Dataset\IMAGE\huawei_gabage\dataset\trainval\VOC2007\train_ob"
+    background_config_path =r"F:\Dataset\IMAGE\huawei_gabage\dataset\trainval\VOC2007\新建文件夹 (2)"
     batch_mul_object_blend(object_path,background_config_path,
-                           image_save_path=r"F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\blend")
+                           image_save_path=r"F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007\blend",target_number=1000)
 test_mul_object()
