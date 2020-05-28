@@ -128,7 +128,7 @@ class BlendingBase:
             positions.append(position)
         # print("缩放比例：", rescales, "\n缩放后大小：", image_sizes)
         return image_sizes, rescales, positions
-
+    # todo 排列组合方式已经忘了怎么写的去了，暂时不做更改
     @classmethod
     def calculate_mul_blending_positions(cls, image_sizes, region_size, sp_dis):
         """计算嵌入位置
@@ -263,7 +263,7 @@ class DirectBlending(BlendingBase):
         多目标融合的位置分布主要包括以下几种方式：
             左右并列排列  1
             上下并列排列  2
-            混合排列   3
+            混合排列   3  暂未实现
         """
         background_img = Image.open(background_img_file)
         # print("背景图片大小：", background_img.size)
@@ -274,10 +274,8 @@ class DirectBlending(BlendingBase):
         region_size = blending_region[2] - blending_region[0], blending_region[3] - blending_region[1]
         image_sizes, rescales, positions = self.calculate_mul_blending_positions(image_sizes, region_size, sp_dis)
         positions = [(position[0] + x, position[1] + y, position[2] + x, position[3] + y) for position in positions]
-        # print("嵌入坐标位置：", positions)
         blending_imgs = [blending_img.resize(size) for (blending_img, size) in zip(blending_imgs, image_sizes)]
         for blending_img, position in zip(blending_imgs, positions):
-            # print(blending_img.size, position)
             background_img.paste(blending_img, (position[0], position[1]))
         if save_img:
             self.save_image(background_img, save_img)

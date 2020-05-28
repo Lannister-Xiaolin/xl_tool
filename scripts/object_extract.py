@@ -12,7 +12,8 @@ from xl_tool.xl_io import file_scanning
 from absl import flags, app, logging
 
 flags.DEFINE_string("xml", "", "xml path")
-flags.DEFINE_string("img", "", "image path, if image and xml in the same dir set it to:F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007 '' ")
+flags.DEFINE_string("img", "",
+                    "image path, if image and xml in the same dir set it to:F:\Dataset\IMAGE\华为—生活垃圾\dataset\trainval\VOC2007 '' ")
 flags.DEFINE_string("save", "", "path to save object")
 Flags = flags.FLAGS
 
@@ -37,6 +38,7 @@ def main(_):
         xml_object_extract(valid_xml_files[i], valid_image_files[i], Flags.save,
                            min_size_sum=40, w_h_limits=(10, 0.1))
         pbar.set_description("抽取进度： ")
+
 
 if __name__ == '__main__':
     app.run(main)
