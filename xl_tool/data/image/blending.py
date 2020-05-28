@@ -200,7 +200,7 @@ class DirectBlending(BlendingBase):
     def blending_one_image(self, background_img_file=None, blending_img_file=None,
                            background_img_array=None, blending_img_array=None, x=None, y=None,
                            x_proportion=0.7, y_proportion=0.7, x_shift=(0.5, 1.5), blending_region=None,
-                           y_shift=(1, 1.9), save_img="", resample=BILINEAR,test=False):
+                           y_shift=(1, 1.9), save_img="", resample=BILINEAR, test=False):
         """单张图片融合嵌入
         下一版完善功能：
             最小比例占比限制
@@ -245,7 +245,7 @@ class DirectBlending(BlendingBase):
             if blending_img_array is None else blending_img_array[:, :, ::-1]
         # print(blending.shape)
         x, y, blending = self.rescale_blending(blending, background, x, y,
-                                               x_proportion, y_proportion, x_shift, y_shift,blending_region)
+                                               x_proportion, y_proportion, x_shift, y_shift, blending_region)
 
         background_img = Image.fromarray(background[:, :, ::-1])
         blending_img = Image.fromarray(blending[:, :, ::-1])
@@ -338,7 +338,7 @@ class PyramidBlending(BlendingBase):
     def blending_one_image(self, background_img_file=None, blending_img_file=None,
                            background_img_array=None, blending_img_array=None,
                            x=None, y=None, x_proportion=0.6, y_proportion=0.6, blending_region=None,
-                           x_shift=(0.5, 1.5), y_shift=(1.0, 1.9), save_img="",test=False):
+                           x_shift=(0.5, 1.5), y_shift=(1.0, 1.9), save_img="", test=False):
         """基于opencv的金字塔融合"""
         background = cv2.imdecode(np.fromfile(background_img_file, dtype=np.uint8), cv2.IMREAD_UNCHANGED) \
             if background_img_array is None else background_img_array[:, :, ::-1]
@@ -346,7 +346,8 @@ class PyramidBlending(BlendingBase):
             if blending_img_array is None else blending_img_array[:, :, ::-1]
         # print(blending.shape)
         x, y, blending = self.rescale_blending(blending, background, x, y,
-                                               x_proportion, y_proportion, x_shift, y_shift,blending_region=blending_region)
+                                               x_proportion, y_proportion, x_shift, y_shift,
+                                               blending_region=blending_region)
 
         g_background = self.generate_gaussian_pyramid(background)
         g_blending = self.generate_gaussian_pyramid(blending)
@@ -371,7 +372,7 @@ class PoissonBlending(BlendingBase):
     def blending_one_image(self, background_img_file=None, blending_img_file=None,
                            background_img_array=None, blending_img_array=None,
                            x=None, y=None, x_proportion=0.6, y_proportion=0.6, blending_region=None,
-                           x_shift=(0.5, 1.5), y_shift=(1.0, 1.9), save_img="",test=False):
+                           x_shift=(0.5, 1.5), y_shift=(1.0, 1.9), save_img="", test=False):
         """基于opencv的金字塔融合"""
         background = cv2.imdecode(np.fromfile(background_img_file, dtype=np.uint8),
                                   cv2.IMREAD_UNCHANGED) \
@@ -380,7 +381,8 @@ class PoissonBlending(BlendingBase):
             if blending_img_array is None else blending_img_array[:, :, ::-1]
         # print(blending.shape)
         x, y, blending = self.rescale_blending(blending, background, x, y,
-                                               x_proportion, y_proportion, x_shift, y_shift,blending_region=blending_region)
+                                               x_proportion, y_proportion, x_shift, y_shift,
+                                               blending_region=blending_region)
         # print(blending.shape)
         blending_result = Image.fromarray(
             cv2.seamlessClone(blending, background, np.ones(blending.shape, dtype=np.uint8) * 255,
@@ -394,19 +396,31 @@ class PoissonBlending(BlendingBase):
 
 
 class ObjectReplaceBlend:
-    """目标框替换"""
+    """目标框替换
+    对标注文件中的目标框， 选择长宽比最相似的图片进行替换
+    """
 
     def __init__(self):
         pass
 
-    def blending_one_image(self, image_file, object_images, object_aspects, xml_file, classes=None,
+    def blending_one_image(self, image_file, object_images, object_aspects, xml_file, replace_classes=None,
                            random_choice=False, aspect_jump=0):
-        """ """
+        """
+        Args:
+            image_file: 待替换标注图片
+            object_images: 目标框图片（PIL.Image）列表，
+            object_aspects: 目标框长宽比
+            xml_file:  标注文件
+            classes： 替换的类别列表，None表示替换所有类别
+            aspect_jump: 是否对长宽比进行扰动,取值0至1，最终用于匹配的长宽比为以下范围采样：
+                原始长宽比*(1-aspect_jump) ， 原始长宽比(1+aspect_jump)
+        """
         boxes = get_bndbox(xml_file)
-        if classes:
-            boxes = [i for i in boxes if i["name"] if classes]
+        if replace_classes:
+            boxes = [i for i in boxes if i["name"] if replace_classes]
         image = Image.open(image_file)
         aug_boxes = []
+        aug_object_indexes = []
         for box in boxes:
             center_x = (box["coordinates"][2] + box["coordinates"][0]) / 2
             center_y = (box["coordinates"][3] + box["coordinates"][1]) / 2
@@ -414,8 +428,9 @@ class ObjectReplaceBlend:
             height = box["coordinates"][3] - box["coordinates"][1]
             aspect = (width) / (height)
             if aspect_jump:
-                aspect = aspect + random.uniform(-aspect_jump * 0.8, aspect_jump)
+                aspect = random.uniform(aspect * (1 - aspect_jump), aspect_jump * (1 + aspect_jump))
             best_aspect_index = binary_search_nearest_abs(object_aspects, aspect, 0, len(object_aspects) - 1)
+            aug_object_indexes.append(best_aspect_index)
             if random_choice:
                 paste_image = random.choice(object_images)
             else:
@@ -427,7 +442,7 @@ class ObjectReplaceBlend:
                               int(center_y - size[1] / 2),
                               int(center_x + size[0] / 2),
                               int(center_y + size[1] / 2)])
-        return image, aug_boxes
+        return image, aug_boxes, aug_object_indexes
 
 
 class SegBlend(BlendingBase):
@@ -490,16 +505,17 @@ def test_blending_pyramid():
 
 def test_blending_direct():
     background_img_file = r"E:\Programming\Python\8_Ganlanz\food_recognition\dataset\自建数据集\4_背景底图" \
-                        r"\4.jpg"
+                          r"\4.jpg"
     blending_img_file = r"E:\Programming\Python\8_Ganlanz\food_recognition\dataset\自建数据集\4_背景底图" \
                         r"\55555.jpg"
     blender = DirectBlending()
     blender1 = PoissonBlending()
     blender2 = PyramidBlending()
     # for i in range(3):
-    blender.blending_one_image(background_img_file, blending_img_file,test=True)
-    blender1.blending_one_image(background_img_file, blending_img_file, blending_region=[100, 200, 540, 480],test=True)
-    blender2.blending_one_image(background_img_file, blending_img_file, blending_region=[100, 200, 540, 480],test=True)
+    blender.blending_one_image(background_img_file, blending_img_file, test=True)
+    blender1.blending_one_image(background_img_file, blending_img_file, blending_region=[100, 200, 540, 480], test=True)
+    blender2.blending_one_image(background_img_file, blending_img_file, blending_region=[100, 200, 540, 480], test=True)
+
 
 def test_mul_blending():
     a = DirectBlending()
